@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 import java.io.*;
 
 public class BoxScore{
@@ -81,6 +82,7 @@ public class BoxScore{
     String name, position, homeTrim, awayTrim;
     Scanner input = new Scanner(System.in);
     int found;
+    DecimalFormat df = new DecimalFormat("#.000");
 
     homeTrim = homeName.replace(" ", "");
     awayTrim = awayName.replace(" ", "");
@@ -108,7 +110,7 @@ public class BoxScore{
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
             toWrite += position  + "|";
             toWrite +=  "0|0|0|0|0|0|";
-            toWrite += String.format("%.3f", player.getAvg())  + "|";
+            toWrite += df.format(player.getAvg())  + "|";
             found = 1;
 
           }
