@@ -6,7 +6,7 @@ public class BoxScore{
 
   public static void main(String[] args){
 
-    String filename, home, away;
+    String filename, home, away, awayTrim, homeTrim;
     Scanner input = new Scanner(System.in);
     ArrayList<Player> awayPlayers, homePlayers;
 
@@ -15,6 +15,9 @@ public class BoxScore{
 
     System.out.println("Please enter the home team name");
     home = input.nextLine();
+
+    homeTrim = home.replace(" ", "");
+    awayTrim = away.replace(" ", "");
 
     //Loads away roster
     System.out.println("Please enter the file name to load away roster");
@@ -26,7 +29,11 @@ public class BoxScore{
     filename = input.nextLine();
     homePlayers = loadPlayerList(filename);
 
+    writeLine(home, away);
     writeBoxScore(awayPlayers, homePlayers, home, away);
+    writePitchers(awayPlayers, homePlayers, home, away);
+
+    System.out.println("Saved box score as " + homeTrim + awayTrim + ".txt");
 
   }
 
@@ -71,14 +78,17 @@ public class BoxScore{
   public static void writeBoxScore(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
 
     String toWrite = "";
-    String name, position;
+    String name, position, homeTrim, awayTrim;
     Scanner input = new Scanner(System.in);
     int found;
 
-    try{
-      BufferedWriter w = new BufferedWriter(new FileWriter("boxScore.txt"));
+    homeTrim = homeName.replace(" ", "");
+    awayTrim = awayName.replace(" ", "");
 
-      toWrite += "\\#|" + awayName + "|Pos|AB|R|H|RBI|BB|SO|BA|\\#|" + homeName + "|Pos|AB|R|H|RBI|BB|SO|BA|\n";
+    try{
+      BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
+
+      toWrite += "##BOX\n\\#|" + awayName + "|Pos|AB|R|H|RBI|BB|SO|BA|\\#|" + homeName + "|Pos|AB|R|H|RBI|BB|SO|BA|\n";
       toWrite += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
 
       for(int i = 0; i<9; i++){
@@ -98,7 +108,7 @@ public class BoxScore{
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
             toWrite += position  + "|";
             toWrite +=  "0|0|0|0|0|0|";
-            toWrite += player.getAvg()  + "|";
+            toWrite += String.format("%.3f", player.getAvg())  + "|";
             found = 1;
 
           }
@@ -124,7 +134,7 @@ public class BoxScore{
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
             toWrite += position  + "|";
             toWrite +=  "0|0|0|0|0|0|";
-            toWrite += player.getAvg()  + "|";
+            toWrite += String.format("%.3f", player.getAvg())  + "|";
             found = 1;
 
           }
@@ -149,4 +159,99 @@ public class BoxScore{
     }
   }
 
+  public static void writeLine(String home, String away){
+
+    String toWrite = "";
+    String name, position, homeTrim, awayTrim;
+    Scanner input = new Scanner(System.in);
+    int found;
+
+    homeTrim = home.replace(" ", "");
+    awayTrim = away.replace(" ", "");
+
+    try{
+      BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt"));
+
+      toWrite += "#" + away + " 0 - 0 " + home + "\n\n##LINE\n";
+      toWrite += "||1|2|3|4|5|6|R|H|\n:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
+      toWrite += "|**" + away + "**|" + "0|0|0|0|0|0|**0**|**0**|\n";
+      toWrite += "|**" + home + "**|" + "0|0|0|0|0|0|**0**|**0**|\n\n";
+      toWrite += "##SCORING PLAYS\nInning|Team|Play|Score\n:--|:--|:--|:--\n\n";
+
+      //Write to file
+      w.write(toWrite);
+      w.close();
+    }
+    catch(IOException e){
+      System.out.println("ERROR: IOException");
+    }
+  }
+
+  public static void writePitchers(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
+
+    String toWrite = "";
+    String name, position, homeTrim, awayTrim;
+    Scanner input = new Scanner(System.in);
+    int found;
+
+    homeTrim = homeName.replace(" ", "");
+    awayTrim = awayName.replace(" ", "");
+
+    try{
+      BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
+
+      toWrite += "\n##PITCHERS\n" + awayName + "|IP|H|ER|BB|SO|ERA/6|" + homeName + "|IP|H|ER|BB|SO|ERA/6|\n";
+      toWrite += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
+
+      //Away pitcher
+      found = 0;
+      System.out.print("Please enter away pitcher: ");
+      name = input.nextLine();
+
+      for(Player player : away){
+        if(name.equals(player.getPlayerName())){
+
+          toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
+          toWrite +=  "0.0|0|0|0|0|";
+          toWrite += String.format("%.2f", player.getEra())  + "|";
+          found = 1;
+
+        }
+      }
+      if(found == 0){
+        System.out.println("PLAYER NOT FOUND");
+        toWrite += "EMPTY|0.0|0|0|0|0|0.00|";
+      }
+
+      //Home pitcher
+      found = 0;
+      System.out.print("Please enter home pitcher: ");
+      name = input.nextLine();
+
+      for(Player player : home){
+        if(name.equals(player.getPlayerName())){
+
+          toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
+          toWrite +=  "0.0|0|0|0|0|";
+          toWrite += String.format("%.2f", player.getEra())  + "|";
+          found = 1;
+
+        }
+      }
+      if(found == 0){
+        System.out.println("PLAYER NOT FOUND");
+        toWrite += "EMPTY|0.0|0|0|0|0|0.00|";
+      }
+
+      toWrite += "\n";
+
+      //Write to file
+      w.write(toWrite);
+      w.close();
+    }
+    catch(IOException e){
+      System.out.println("ERROR: IOException");
+    }
+
+  }
 }
