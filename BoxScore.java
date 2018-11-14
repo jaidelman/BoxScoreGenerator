@@ -5,9 +5,11 @@ import java.io.*;
 
 public class BoxScore{
 
+  private static String homeTrim, awayTrim;
+
   public static void main(String[] args){
 
-    String filename, home, away, awayTrim, homeTrim;
+    String filename, home, away;
     Scanner input = new Scanner(System.in);
     ArrayList<Player> awayPlayers, homePlayers;
 
@@ -45,6 +47,22 @@ public class BoxScore{
     int count = 0;
     ArrayList<Player> playerList = new ArrayList<Player>();
 
+    /*
+    CloseableHttpClient httpclient = HttpClients.createDefault();
+    HttpGet httpGet = new HttpGet("https://sheets.googleapis.com/v4/spreadsheets/1JxXUlVbF_c72OA_f9wdykNNkJ0k4Z49vsUl8J-qNzJA/values:batchGet");
+    CloseableHttpResponse response1 = httpclient.execute(httpGet);
+
+    try {
+      System.out.println(response1.getStatusLine());
+      HttpEntity entity1 = response1.getEntity();
+      // do something useful with the response body
+      // and ensure it is fully consumed
+      EntityUtils.consume(entity1);
+    } finally {
+      response1.close();
+    }
+    */
+
     try(BufferedReader input = new BufferedReader(new FileReader(filename))){
 
       while((line = input.readLine()) != null){
@@ -79,13 +97,10 @@ public class BoxScore{
   public static void writeBoxScore(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
 
     String toWrite = "";
-    String name, position, homeTrim, awayTrim;
+    String name, position;
     Scanner input = new Scanner(System.in);
     int found;
     DecimalFormat df = new DecimalFormat("#.000");
-
-    homeTrim = homeName.replace(" ", "");
-    awayTrim = awayName.replace(" ", "");
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
@@ -136,7 +151,7 @@ public class BoxScore{
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
             toWrite += position  + "|";
             toWrite +=  "0|0|0|0|0|0|";
-            toWrite += String.format("%.3f", player.getAvg())  + "|";
+            toWrite += df.format(player.getAvg())  + "|";
             found = 1;
 
           }
@@ -164,12 +179,9 @@ public class BoxScore{
   public static void writeLine(String home, String away){
 
     String toWrite = "";
-    String name, position, homeTrim, awayTrim;
+    String name, position;
     Scanner input = new Scanner(System.in);
     int found;
-
-    homeTrim = home.replace(" ", "");
-    awayTrim = away.replace(" ", "");
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt"));
@@ -192,12 +204,9 @@ public class BoxScore{
   public static void writePitchers(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
 
     String toWrite = "";
-    String name, position, homeTrim, awayTrim;
+    String name, position;
     Scanner input = new Scanner(System.in);
     int found;
-
-    homeTrim = homeName.replace(" ", "");
-    awayTrim = awayName.replace(" ", "");
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
