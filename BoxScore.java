@@ -188,8 +188,8 @@ public class BoxScore{
 
       toWrite += "#" + away + " 0 - 0 " + home + "\n\n##LINE\n";
       toWrite += "||1|2|3|4|5|6|R|H|\n:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
-      toWrite += "|**" + away + "**|" + "0|0|0|0|0|0|**0**|**0**|\n";
-      toWrite += "|**" + home + "**|" + "0|0|0|0|0|0|**0**|**0**|\n\n";
+      toWrite += "|**" + away + "**|" + "**0**|-|-|-|-|-|**0**|**0**|\n";
+      toWrite += "|**" + home + "**|" + "-|-|-|-|-|-|**0**|**0**|\n\n";
       toWrite += "##SCORING PLAYS\nInning|Team|Play|Score\n:--|:--|:--|:--\n\n";
 
       //Write to file
