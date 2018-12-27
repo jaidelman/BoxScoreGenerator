@@ -5,22 +5,22 @@ import java.io.*;
 
 public class BoxScore{
 
-  private static String homeTrim, awayTrim;
+  private static String homeTrim, awayTrim, homeName, awayName;
 
   public static void main(String[] args){
 
-    String filename, home, away;
+    String filename;
     Scanner input = new Scanner(System.in);
     ArrayList<Player> awayPlayers, homePlayers;
 
     System.out.println("Please enter the away team name (Eg: Red Sox)");
-    away = input.nextLine();
+    awayName = input.nextLine();
 
     System.out.println("Please enter the home team name");
-    home = input.nextLine();
+    homeName = input.nextLine();
 
-    homeTrim = home.replace(" ", "");
-    awayTrim = away.replace(" ", "");
+    homeTrim = homeName.replace(" ", "");
+    awayTrim = awayName.replace(" ", "");
 
     //Loads away roster
     System.out.println("Please enter the file name to load away roster");
@@ -32,9 +32,9 @@ public class BoxScore{
     filename = input.nextLine();
     homePlayers = loadPlayerList(filename);
 
-    writeLine(home, away);
-    writeBoxScore(awayPlayers, homePlayers, home, away);
-    writePitchers(awayPlayers, homePlayers, home, away);
+    writeLine();
+    writeBoxScore(awayPlayers, homePlayers);
+    writePitchers(awayPlayers, homePlayers);
 
     System.out.println("Saved box score as " + homeTrim + awayTrim + ".txt");
 
@@ -94,7 +94,7 @@ public class BoxScore{
 
   }
 
-  public static void writeBoxScore(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
+  public static void writeBoxScore(ArrayList<Player> away, ArrayList<Player> home){
 
     String toWrite = "";
     String name, position;
@@ -112,7 +112,7 @@ public class BoxScore{
 
         //Away players
         found = 0;
-        System.out.print("Please enter away player " + (i+1) + ": ");
+        System.out.print("Please enter " + awayName + " player " + (i+1) + ": ");
         name = input.nextLine();
 
         for(Player player : away){
@@ -138,7 +138,7 @@ public class BoxScore{
 
         //Home Players
         found = 0;
-        System.out.print("Please enter home player " + (i+1) + ": ");
+        System.out.print("Please enter " + homeName + " player " + (i+1) + ": ");
         name = input.nextLine();
 
         for(Player player : home){
@@ -176,7 +176,7 @@ public class BoxScore{
     }
   }
 
-  public static void writeLine(String home, String away){
+  public static void writeLine(){
 
     String toWrite = "";
     String name, position;
@@ -186,10 +186,10 @@ public class BoxScore{
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt"));
 
-      toWrite += "#" + away + " 0 - 0 " + home + "\n\n##LINE\n";
+      toWrite += "#" + awayName + " 0 - 0 " + homeName + "\n\n##LINE\n";
       toWrite += "||1|2|3|4|5|6|R|H|\n:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
-      toWrite += "|**" + away + "**|" + "**0**|-|-|-|-|-|**0**|**0**|\n";
-      toWrite += "|**" + home + "**|" + "-|-|-|-|-|-|**0**|**0**|\n\n";
+      toWrite += "|**" + awayName + "**|" + "**0**|-|-|-|-|-|**0**|**0**|\n";
+      toWrite += "|**" + homeName + "**|" + "-|-|-|-|-|-|**0**|**0**|\n\n";
       toWrite += "##SCORING PLAYS\nInning|Team|Play|Score\n:--|:--|:--|:--\n\n";
 
       //Write to file
@@ -201,7 +201,7 @@ public class BoxScore{
     }
   }
 
-  public static void writePitchers(ArrayList<Player> away, ArrayList<Player> home, String homeName, String awayName){
+  public static void writePitchers(ArrayList<Player> away, ArrayList<Player> home){
 
     String toWrite = "";
     String name, position;
@@ -216,7 +216,7 @@ public class BoxScore{
 
       //Away pitcher
       found = 0;
-      System.out.print("Please enter away pitcher: ");
+      System.out.print("Please enter " + awayName + " pitcher: ");
       name = input.nextLine();
 
       for(Player player : away){
@@ -236,7 +236,7 @@ public class BoxScore{
 
       //Home pitcher
       found = 0;
-      System.out.print("Please enter home pitcher: ");
+      System.out.print("Please enter " + homeName + " pitcher: ");
       name = input.nextLine();
 
       for(Player player : home){
