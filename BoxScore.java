@@ -5,7 +5,8 @@ import java.io.*;
 
 public class BoxScore{
 
-  private static String homeTrim, awayTrim, homeName, awayName;
+  private static String homeTrim, awayTrim, homeName, awayName; //Team names
+  private static int invalidLineup = 0; //Boolean for invalid Lineup
 
   public static void main(String[] args){
 
@@ -34,9 +35,15 @@ public class BoxScore{
 
     writeLine();
     writeBoxScore(awayPlayers, homePlayers);
-    writePitchers(awayPlayers, homePlayers);
 
-    System.out.println("Saved box score as " + homeTrim + awayTrim + ".txt");
+    if(invalidLineup == 0){
+      writePitchers(awayPlayers, homePlayers);
+      System.out.println("Saved box score as " + homeTrim + awayTrim + ".txt");
+    }
+    else{
+      System.out.println("Program Terminated");
+    }
+
 
   }
 
@@ -75,6 +82,13 @@ public class BoxScore{
           cur.setUsername(array[4]);
           cur.setAvg(Double.valueOf(array[23]));
           cur.setEra(Double.valueOf(array[35]));
+
+          //Adds possible positions
+          cur.addPosition(array[0]);
+          cur.addPosition(array[1]);
+          cur.addPosition(array[2]);
+          cur.addPosition("DH"); //Anyone can DH
+
           playerList.add(cur);
         }
 
@@ -99,7 +113,7 @@ public class BoxScore{
     String toWrite = "";
     String name, position;
     Scanner input = new Scanner(System.in);
-    int found;
+    int found, validPosition;
     DecimalFormat df = new DecimalFormat("#.000");
 
     try{
@@ -120,6 +134,22 @@ public class BoxScore{
 
             System.out.print("Please enter position: ");
             position = input.nextLine();
+
+            //Checks if player can play that position
+            validPosition = 0;
+            for(String positions : player.getPositions()){
+
+              if(position.equals(positions)){
+                validPosition = 1;
+              }
+
+            }
+
+            if(validPosition == 0){
+              System.out.println("ERROR: " + name + " cannot play that position!");
+              invalidLineup = 1;
+              return;
+            }
 
             toWrite += "**" + (i+1) + "**" + "|";
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
@@ -147,6 +177,22 @@ public class BoxScore{
             System.out.print("Please enter position: ");
             position = input.nextLine();
 
+            //Checks if player can play that position
+            validPosition = 0;
+            for(String positions : player.getPositions()){
+
+              if(position.equals(positions)){
+                validPosition = 1;
+              }
+
+            }
+
+            if(validPosition == 0){
+              System.out.println("ERROR: " + name + " cannot play that position!");
+              invalidLineup = 1;
+              return;
+            }
+            
             toWrite += "**" + (i+1) + "**" + "|";
             toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
             toWrite += position  + "|";
@@ -179,9 +225,6 @@ public class BoxScore{
   public static void writeLine(){
 
     String toWrite = "";
-    String name, position;
-    Scanner input = new Scanner(System.in);
-    int found;
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt"));
@@ -204,7 +247,7 @@ public class BoxScore{
   public static void writePitchers(ArrayList<Player> away, ArrayList<Player> home){
 
     String toWrite = "";
-    String name, position;
+    String name;
     Scanner input = new Scanner(System.in);
     int found;
 

@@ -1,19 +1,20 @@
-
+import java.util.ArrayList;
 
 public class Player{
 
   private String name;
   private String username;
-  private String position;
   private double era;
   private double avg;
+  private ArrayList<String> positions;
 
   public Player(){
     name = "";
     username = "";
-    position = "";
     era = 0.0;
     avg = 0.0;
+
+    positions = new ArrayList<String>();
   }
 
   public void setPlayerName(String name){
@@ -32,13 +33,13 @@ public class Player{
     return this.username;
   }
 
-  public void setPosition(String position){
-    this.position = position;
+  public void addPosition(String pos){
+    positions.add(pos);
+  }
+  public ArrayList<String> getPositions(){
+    return this.positions;
   }
 
-  public String getPosition(){
-    return this.position;
-  }
   public void setEra(double era){
     this.era = era;
   }
