@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 public class Player{
 
@@ -55,4 +56,34 @@ public class Player{
   public double getAvg(){
     return this.avg;
   }
+
+  //Checks if a position is a position that player can play
+  public boolean isValidPosition(String pos){
+
+    for(String position : positions){
+
+      if(pos.equals(position)){
+        return true;
+      }
+
+    }
+
+    return false;
+  }
+
+  //Sends the format for the player in the box score
+  public String getString(int i, String position){
+
+    String toReturn = "";
+    DecimalFormat df = new DecimalFormat("#.000");
+
+    toReturn += "**" + (i+1) + "**" + "|";
+    toReturn += "[" + this.name + "](" + this.username + ")"  + "|";
+    toReturn += position  + "|";
+    toReturn +=  "0|0|0|0|0|0|";
+    toReturn += df.format(this.avg)  + "|";
+
+    return toReturn;
+  }
+
 }

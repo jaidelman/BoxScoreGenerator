@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.text.DecimalFormat;
 import java.io.*;
 
 public class BoxScore{
 
   private static String homeTrim, awayTrim, homeName, awayName; //Team names
-  private static int invalidLineup = 0; //Boolean for invalid Lineup
+  private static boolean invalidLineup = false; //Boolean for invalid Lineup
 
   public static void main(String[] args){
 
@@ -36,7 +35,7 @@ public class BoxScore{
     writeLine();
     writeBoxScore(awayPlayers, homePlayers);
 
-    if(invalidLineup == 0){
+    if(invalidLineup == false){
       writePitchers(awayPlayers, homePlayers);
       System.out.println("Saved box score as " + homeTrim + awayTrim + ".txt");
     }
@@ -113,8 +112,7 @@ public class BoxScore{
     String toWrite = "";
     String name, position;
     Scanner input = new Scanner(System.in);
-    int found, validPosition;
-    DecimalFormat df = new DecimalFormat("#.000");
+    boolean found;
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
@@ -125,7 +123,7 @@ public class BoxScore{
       for(int i = 0; i<9; i++){
 
         //Away players
-        found = 0;
+        found = false;
         System.out.print("Please enter " + awayName + " player " + (i+1) + ": ");
         name = input.nextLine();
 
@@ -136,38 +134,25 @@ public class BoxScore{
             position = input.nextLine();
 
             //Checks if player can play that position
-            validPosition = 0;
-            for(String positions : player.getPositions()){
-
-              if(position.equals(positions)){
-                validPosition = 1;
-              }
-
-            }
-
-            if(validPosition == 0){
+            if(!player.isValidPosition(position)){
               System.out.println("ERROR: " + name + " cannot play that position!");
-              invalidLineup = 1;
+              invalidLineup = true;
               return;
             }
 
-            toWrite += "**" + (i+1) + "**" + "|";
-            toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
-            toWrite += position  + "|";
-            toWrite +=  "0|0|0|0|0|0|";
-            toWrite += df.format(player.getAvg())  + "|";
-            found = 1;
+            toWrite += player.getString(i, position);
+            found = true;
 
           }
         }
-        if(found == 0){
+        if(found == false){
           System.out.println("PLAYER NOT FOUND");
           toWrite += "**" + (i+1) + "**" + "|";
           toWrite += "EMPTY|?|0|0|0|0|0|0|.000|";
         }
 
         //Home Players
-        found = 0;
+        found = false;
         System.out.print("Please enter " + homeName + " player " + (i+1) + ": ");
         name = input.nextLine();
 
@@ -178,32 +163,18 @@ public class BoxScore{
             position = input.nextLine();
 
             //Checks if player can play that position
-            validPosition = 0;
-            for(String positions : player.getPositions()){
-
-              if(position.equals(positions)){
-                validPosition = 1;
-              }
-
-            }
-
-            if(validPosition == 0){
+            if(!player.isValidPosition(position)){
               System.out.println("ERROR: " + name + " cannot play that position!");
-              invalidLineup = 1;
+              invalidLineup = true;
               return;
             }
-            
-            toWrite += "**" + (i+1) + "**" + "|";
-            toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
-            toWrite += position  + "|";
-            toWrite +=  "0|0|0|0|0|0|";
-            toWrite += df.format(player.getAvg())  + "|";
-            found = 1;
 
+            toWrite += player.getString(i, position);
+            found = true;
           }
 
         }
-        if(found == 0){
+        if(found == false){
           System.out.println("PLAYER NOT FOUND");
           toWrite += "**" + (i+1) + "**" + "|";
           toWrite += "EMPTY|?|0|0|0|0|0|0|.000|";
@@ -249,7 +220,7 @@ public class BoxScore{
     String toWrite = "";
     String name;
     Scanner input = new Scanner(System.in);
-    int found;
+    boolean found;
 
     try{
       BufferedWriter w = new BufferedWriter(new FileWriter(homeTrim + awayTrim + ".txt", true));
@@ -258,7 +229,7 @@ public class BoxScore{
       toWrite += ":--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--\n";
 
       //Away pitcher
-      found = 0;
+      found = false;
       System.out.print("Please enter " + awayName + " pitcher: ");
       name = input.nextLine();
 
@@ -268,17 +239,17 @@ public class BoxScore{
           toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
           toWrite +=  "0.0|0|0|0|0|";
           toWrite += String.format("%.2f", player.getEra())  + "|";
-          found = 1;
+          found = true;
 
         }
       }
-      if(found == 0){
+      if(found == false){
         System.out.println("PLAYER NOT FOUND");
         toWrite += "EMPTY|0.0|0|0|0|0|0.00|";
       }
 
       //Home pitcher
-      found = 0;
+      found = false;
       System.out.print("Please enter " + homeName + " pitcher: ");
       name = input.nextLine();
 
@@ -288,11 +259,11 @@ public class BoxScore{
           toWrite += "[" + name + "](" + player.getUsername() + ")"  + "|";
           toWrite +=  "0.0|0|0|0|0|";
           toWrite += String.format("%.2f", player.getEra())  + "|";
-          found = 1;
+          found = true;
 
         }
       }
-      if(found == 0){
+      if(found == false){
         System.out.println("PLAYER NOT FOUND");
         toWrite += "EMPTY|0.0|0|0|0|0|0.00|";
       }
